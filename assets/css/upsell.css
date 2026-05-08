@@ -1,0 +1,61 @@
+
+.itchenking-upsell-wrapper{
+    background:#fff;
+    padding:25px;
+    border-radius:18px;
+    border:1px solid #eee;
+}
+
+.itchenking-message{
+    font-size:18px;
+    font-weight:600;
+}
+
+.itchenking-message strong{
+    color:#7c3aed;
+}
+
+.itchenking-progress{
+    height:14px;
+    background:#eee;
+    border-radius:20px;
+    overflow:hidden;
+    margin:15px 0;
+}
+
+.itchenking-progress-fill{
+    height:100%;
+    background:#7c3aed;
+}
+
+.itchenking-product-card{
+    border:1px solid #eee;
+    padding:15px;
+    border-radius:14px;
+    text-align:center;
+}
+
+.itchenking-product-card img{
+    width:100%;
+    border-radius:12px;
+    margin-bottom:10px;
+}
+
+.itchenking-price{
+    font-weight:700;
+    color:#7c3aed;
+    margin-bottom:10px;
+}
+
+.button{
+    background:#7c3aed !important;
+    color:#fff !important;
+    width:100%;
+    padding:10px;
+    border-radius:10px;
+}
+
+.single_add_to_cart_button.disabled{
+    opacity:0.5;
+    pointer-events:none;
+}
