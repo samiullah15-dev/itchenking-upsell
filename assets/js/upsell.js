@@ -114,20 +114,29 @@ jQuery(function ($) {
 
             window.itchenkingSwiper = new Swiper(".itchenking-swiper", {
                 slidesPerView: 1,
+                slidesPerGroup: 1,
                 spaceBetween: 15,
+                watchOverflow: true,
                 navigation: {
                     nextEl: ".swiper-button-next",
                     prevEl: ".swiper-button-prev"
                 },
                 breakpoints: {
+                    0: {
+                        slidesPerView: 1,
+                        slidesPerGroup: 1
+                    },
                     768: {
-                        slidesPerView: 1
+                        slidesPerView: 2,
+                        slidesPerGroup: 1
                     },
                     1024: {
-                        slidesPerView: 3
+                        slidesPerView: 3,
+                        slidesPerGroup: 1
                     },
                     1200: {
-                        slidesPerView: 4
+                        slidesPerView: 4,
+                        slidesPerGroup: 1
                     }
                 }
             });
