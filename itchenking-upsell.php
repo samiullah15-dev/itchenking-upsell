@@ -76,7 +76,7 @@ add_action('wp_enqueue_scripts', function () {
         'itchenking-js',
         ITCHENKING_URL . 'assets/js/upsell.js',
         ['jquery', 'swiper-js', 'wc-add-to-cart', 'wc-add-to-cart-variation'],
-        ITCHENKING_VERSION,
+        '1.0.0',
         true
     );
 
