@@ -79,6 +79,8 @@
     line-height: 1.35;
     margin: 0;
     min-height: 42px;
+    color: #242e42;
+    font-weight: 600;
 }
 
 .itchenking-price {
@@ -94,27 +96,36 @@
     width: 100%;
     padding: 10px 12px;
     border-radius: 10px;
-    border: 0;
+    border: 0 !important;
     cursor: pointer;
     font-weight: 600;
     text-align: center;
+    min-height: 42px;
+    line-height: 1.2;
 }
 
 .itchenking-product-card .button:hover,
 .itchenking-product-card button.button:hover {
-    opacity: 0.92;
+    background: #193366 !important;
+    color: #fff !important;
+    opacity: 1;
 }
 
 .itchenking-product-card .button.loading,
 .itchenking-product-card button.button.loading,
 .itchenking-product-card .button:disabled,
 .itchenking-product-card button.button:disabled,
+.itchenking-add-variable-product.disabled,
+.itchenking-add-variable-product:disabled,
 .single_add_to_cart_button.disabled {
-    opacity: 0.5;
+    background: #9ca3af !important;
+    color: #fff !important;
+    opacity: 0.6;
     cursor: not-allowed;
     pointer-events: none;
 }
 
+/* Variation form old wrapper support */
 .itchenking-variation-fields {
     display: flex;
     flex-direction: column;
@@ -131,16 +142,72 @@
     font-size: 12px;
     font-weight: 600;
     margin-bottom: 4px;
+    color: #242e42;
+}
+
+/* Variation form updated WooCommerce table support */
+.itchenking-variable-form {
+    margin: 0;
+    width: 100%;
+}
+
+.itchenking-variation-table,
+.itchenking-variable-form table.variations {
+    width: 100%;
+    margin: 0 0 10px;
+    border: 0;
+    border-collapse: collapse;
+}
+
+.itchenking-variation-table tr,
+.itchenking-variable-form table.variations tr {
+    display: block;
+    margin-bottom: 8px;
+}
+
+.itchenking-variation-table td,
+.itchenking-variable-form table.variations td {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    text-align: left;
+}
+
+.itchenking-variation-table td.label,
+.itchenking-variable-form table.variations td.label {
+    margin-bottom: 4px;
+}
+
+.itchenking-variation-table label,
+.itchenking-variable-form table.variations label {
+    display: block;
+    font-size: 12px;
+    font-weight: 600;
+    color: #242e42;
+    margin: 0 0 4px;
 }
 
 .itchenking-variation-field select,
-.itchenking-variation-select {
+.itchenking-variation-select,
+.itchenking-variable-form select {
     width: 100%;
     min-height: 38px;
     border: 1px solid #ddd;
     border-radius: 8px;
     padding: 7px 9px;
     background: #fff;
+    color: #242e42;
+    font-size: 13px;
+}
+
+.itchenking-variable-form select:focus {
+    outline: none;
+    border-color: #193366;
+}
+
+.itchenking-variable-form .reset_variations {
+    display: none !important;
 }
 
 .itchenking-card-message {
@@ -171,7 +238,19 @@
 
 .itchenking-swiper .swiper-button-next,
 .itchenking-swiper .swiper-button-prev {
-    color: #242e42;
+    color: #242e42 !important;
+}
+
+.itchenking-swiper .swiper-button-next::after,
+.itchenking-swiper .swiper-button-prev::after {
+    color: #242e42 !important;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+.itchenking-swiper .swiper-button-next:hover,
+.itchenking-swiper .swiper-button-prev:hover {
+    color: #193366 !important;
 }
 
 @media (max-width: 767px) {
@@ -186,5 +265,14 @@
     .itchenking-swiper {
         padding-left: 25px;
         padding-right: 25px;
+    }
+
+    .itchenking-product-title {
+        font-size: 14px;
+        min-height: 38px;
+    }
+
+    .itchenking-product-card {
+        padding: 12px;
     }
 }
