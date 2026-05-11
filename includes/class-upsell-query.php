@@ -7,15 +7,7 @@ if (!defined('ABSPATH')) {
 class ItchenKing_Upsell_Query {
 
     /**
-     * Show 10 lowest priced products when any amount remains for free shipping.
-     *
-     * Example:
-     * Free delivery threshold = £50
-     * Cart total = £30
-     * Remaining = £20
-     *
-     * Slider will show the 10 lowest priced in-stock visible products,
-     * excluding products already in the cart.
+     * Show 10 lowest priced WooCommerce products when cart is below free shipping threshold.
      */
     public static function get_products($remaining, $exclude = []) {
 
@@ -28,7 +20,7 @@ class ItchenKing_Upsell_Query {
 
         $products = wc_get_products([
             'status'             => 'publish',
-            'limit'              => 20,
+            'limit'              => 50,
             'exclude'            => $exclude,
             'stock_status'       => 'instock',
             'type'               => ['simple', 'variable'],
@@ -41,15 +33,21 @@ class ItchenKing_Upsell_Query {
         $filtered = [];
 
         foreach ($products as $product) {
-            if (!$product || !$product->is_purchasable() || !$product->is_in_stock()) {
+            if (!$product || !$product->is_type(['simple', 'variable'])) {
+                continue;
+            }
+
+            if (!$product->is_purchasable() || !$product->is_in_stock()) {
                 continue;
             }
 
             $price = (float) $product->get_price();
 
-            if ($price > 0) {
-                $filtered[] = $product;
+            if ($price <= 0) {
+                continue;
             }
+
+            $filtered[] = $product;
         }
 
         usort($filtered, function ($a, $b) {
