@@ -54,6 +54,6 @@ class ItchenKing_Upsell_Query {
             return (float) $a->get_price() <=> (float) $b->get_price();
         });
 
-        return array_slice($filtered, 0, 10);
+        return array_slice($filtered, 0, 15);
     }
 }
