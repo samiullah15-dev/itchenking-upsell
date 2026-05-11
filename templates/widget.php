@@ -85,21 +85,14 @@ if (!$data['unlocked']) {
                                     <?php echo wp_kses_post($product->get_price_html()); ?>
                                 </div>
 
-                                <?php if ($product->is_type('simple')) : ?>
+<?php if ($product->is_type('simple')) : ?>
 
-                                    <button type="button"
-                                            class="button itchenking-add-simple-product"
-                                            data-product_id="<?php echo esc_attr($product_id); ?>"
-                                            data-quantity="1">
-                                        <?php esc_html_e('Add to Cart', 'itchenking-upsell'); ?>
-                                    </button>
-
-<?php elseif ($product->is_type('variable')) : ?>
-
-    <?php
-    $available_variations = $product->get_available_variations();
-    $variation_attributes = $product->get_variation_attributes();
-    ?>
+    <button type="button"
+            class="button itchenking-add-simple-product"
+            data-product_id="<?php echo esc_attr($product_id); ?>"
+            data-quantity="1">
+        <?php esc_html_e('Add to Cart', 'itchenking-upsell'); ?>
+    </button>
 
 <?php elseif ($product->is_type('variable')) : ?>
 
