@@ -18,7 +18,7 @@
 }
 
 .itchenking-message strong {
-    color: #7c3aed;
+    color: #193366;
 }
 
 .itchenking-sub-message {
@@ -37,7 +37,7 @@
 
 .itchenking-progress-fill {
     height: 100%;
-    background: #7c3aed;
+    background: #193366;
     border-radius: 20px;
     transition: width 0.25s ease;
 }
@@ -83,13 +83,13 @@
 
 .itchenking-price {
     font-weight: 700;
-    color: #7c3aed;
+    color: #242e42;
     margin-bottom: 2px;
 }
 
 .itchenking-product-card .button,
 .itchenking-product-card button.button {
-    background: #7c3aed !important;
+    background: #242e42 !important;
     color: #fff !important;
     width: 100%;
     padding: 10px 12px;
@@ -155,7 +155,7 @@
     padding: 16px;
     border-radius: 14px;
     background: #f5f3ff;
-    color: #4c1d95;
+    color: #193366;
     font-size: 16px;
 }
 
@@ -171,7 +171,7 @@
 
 .itchenking-swiper .swiper-button-next,
 .itchenking-swiper .swiper-button-prev {
-    color: #7c3aed;
+    color: #242e42;
 }
 
 @media (max-width: 767px) {
