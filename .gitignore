@@ -1,6 +1,10 @@
+# Git metadata from accidental zips
+.git/
+
 # OS files
 .DS_Store
 Thumbs.db
+__MACOSX/
 
 # Editor / IDE files
 .vscode/
@@ -16,7 +20,7 @@ error_log
 # WordPress debug files
 wp-content/debug.log
 
-# Environment files
+# Environment / secrets
 .env
 .env.*
 *.local
@@ -39,21 +43,13 @@ temp/
 *.orig
 *.swp
 
-# Archive files
+# Archives
 *.zip
 *.tar
 *.tar.gz
 *.rar
 
-# Database files
+# Database exports
 *.sql
 *.sqlite
 *.db
-
-# Mac resource files
-__MACOSX/
-
-# Composer lock optional
-# Keep composer.lock if this is an application.
-# Ignore only if this is a reusable plugin/package.
-# composer.lock
