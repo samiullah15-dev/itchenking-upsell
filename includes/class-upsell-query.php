@@ -8,25 +8,66 @@ class ItchenKing_Upsell_Query {
 
     /**
      * Get products close to the remaining amount needed for free shipping.
+     *
      * Example:
-     * Threshold £50, cart £40, remaining £10
-     * Show products around £10 to £15.
+     * Free delivery threshold = £50
+     * Cart total = £30
+     * Remaining = £20
+     *
+     * Product priority:
+     * 1. £20 to £30
+     * 2. £15 to £30
+     * 3. £10 to £30
+     *
+     * It will NOT show expensive products like £50, £70, £120 unless your remaining amount is close to that.
      */
     public static function get_products($remaining, $exclude = []) {
 
         $remaining = (float) $remaining;
         $exclude   = array_values(array_unique(array_filter(array_map('absint', $exclude))));
 
-        /*
-         * Main target range:
-         * If remaining is £10, show products from £10 to £15.
-         */
-        $min_price = max(1, $remaining);
-        $max_price = max($remaining + 5, 5);
+        if ($remaining <= 0) {
+            return [];
+        }
 
-        $args = [
+        /*
+         * Main max range.
+         * If remaining is £20, never show products above £30.
+         */
+        $max_price = $remaining + 10;
+
+        /*
+         * First try exact unlock range:
+         * Remaining £20 = show £20 to £30.
+         */
+        $products = self::query_products($remaining, $max_price, $exclude);
+
+        /*
+         * Fallback 1:
+         * If no product found, include slightly cheaper products:
+         * Remaining £20 = show £15 to £30.
+         */
+        if (empty($products)) {
+            $products = self::query_products(max(1, $remaining - 5), $max_price, $exclude);
+        }
+
+        /*
+         * Fallback 2:
+         * If still empty, include more cheaper products:
+         * Remaining £20 = show £10 to £30.
+         */
+        if (empty($products)) {
+            $products = self::query_products(max(1, $remaining - 10), $max_price, $exclude);
+        }
+
+        return $products;
+    }
+
+    private static function query_products($min_price, $max_price, $exclude = []) {
+
+        $products = wc_get_products([
             'status'             => 'publish',
-            'limit'              => 12,
+            'limit'              => 24,
             'exclude'            => $exclude,
             'stock_status'       => 'instock',
             'type'               => ['simple', 'variable'],
@@ -37,60 +78,38 @@ class ItchenKing_Upsell_Query {
             'meta_query'         => [
                 [
                     'key'     => '_price',
-                    'value'   => [$min_price, $max_price],
+                    'value'   => [(float) $min_price, (float) $max_price],
                     'compare' => 'BETWEEN',
                     'type'    => 'DECIMAL(10,2)',
                 ],
             ],
-        ];
-
-        $products = wc_get_products($args);
+        ]);
 
         /*
-         * Fallback 1:
-         * If no product found between £10 and £15,
-         * show products slightly higher, like £10 to £25.
+         * Extra safety filter.
+         * This prevents WooCommerce/theme/query conflicts from showing expensive products.
          */
-        if (empty($products)) {
-            $products = wc_get_products([
-                'status'             => 'publish',
-                'limit'              => 12,
-                'exclude'            => $exclude,
-                'stock_status'       => 'instock',
-                'type'               => ['simple', 'variable'],
-                'catalog_visibility' => 'visible',
-                'orderby'            => 'price',
-                'order'              => 'ASC',
-                'return'             => 'objects',
-                'meta_query'         => [
-                    [
-                        'key'     => '_price',
-                        'value'   => [$remaining, $remaining + 15],
-                        'compare' => 'BETWEEN',
-                        'type'    => 'DECIMAL(10,2)',
-                    ],
-                ],
-            ]);
+        $filtered = [];
+
+        foreach ($products as $product) {
+            if (!$product || !$product->is_purchasable() || !$product->is_in_stock()) {
+                continue;
+            }
+
+            $price = (float) $product->get_price();
+
+            if ($price >= $min_price && $price <= $max_price) {
+                $filtered[] = $product;
+            }
         }
 
         /*
-         * Fallback 2:
-         * If still no product found, show nearest cheaper/low-price products.
+         * Sort by lowest price first.
          */
-        if (empty($products)) {
-            $products = wc_get_products([
-                'status'             => 'publish',
-                'limit'              => 12,
-                'exclude'            => $exclude,
-                'stock_status'       => 'instock',
-                'type'               => ['simple', 'variable'],
-                'catalog_visibility' => 'visible',
-                'orderby'            => 'price',
-                'order'              => 'ASC',
-                'return'             => 'objects',
-            ]);
-        }
+        usort($filtered, function ($a, $b) {
+            return (float) $a->get_price() <=> (float) $b->get_price();
+        });
 
-        return $products;
+        return array_slice($filtered, 0, 12);
     }
 }
