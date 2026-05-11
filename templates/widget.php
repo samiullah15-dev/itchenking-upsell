@@ -94,53 +94,55 @@ if (!$data['unlocked']) {
                                         <?php esc_html_e('Add to Cart', 'itchenking-upsell'); ?>
                                     </button>
 
-                                <?php elseif ($product->is_type('variable')) : ?>
+<?php elseif ($product->is_type('variable')) : ?>
 
-                                    <?php
-                                    $available_variations = $product->get_available_variations();
-                                    $attributes           = $product->get_variation_attributes();
-                                    ?>
+    <?php
+    $available_variations = $product->get_available_variations();
+    $variation_attributes = $product->get_variation_attributes();
+    ?>
 
-                                    <?php if (!empty($available_variations)) : ?>
+    <?php if (!empty($available_variations)) : ?>
 
-                                        <form class="variations_form cart itchenking-variation-form"
-                                              data-product_id="<?php echo esc_attr($product_id); ?>"
-                                              data-product_variations="<?php echo esc_attr(wp_json_encode($available_variations)); ?>">
+        <form class="variations_form cart itchenking-variable-form"
+              data-product_id="<?php echo esc_attr($product_id); ?>"
+              data-product_variations="<?php echo esc_attr(wp_json_encode($available_variations)); ?>">
 
-                                            <div class="itchenking-variation-fields">
-                                                <?php foreach ($attributes as $attribute_name => $options) : ?>
-                                                    <div class="itchenking-variation-field">
-                                                        <label>
-                                                            <?php echo esc_html(wc_attribute_label($attribute_name)); ?>
-                                                        </label>
+            <div class="itchenking-variation-fields">
 
-                                                        <?php
-                                                        wc_dropdown_variation_attribute_options([
-                                                            'options'   => $options,
-                                                            'attribute' => $attribute_name,
-                                                            'product'   => $product,
-                                                            'class'     => 'itchenking-variation-select',
-                                                        ]);
-                                                        ?>
-                                                    </div>
-                                                <?php endforeach; ?>
-                                            </div>
+                <?php foreach ($variation_attributes as $attribute_name => $options) : ?>
+                    <div class="itchenking-variation-field">
+                        <label>
+                            <?php echo esc_html(wc_attribute_label($attribute_name)); ?>
+                        </label>
 
-                                            <input type="hidden" name="quantity" value="1">
-                                            <input type="hidden" name="add-to-cart" value="<?php echo esc_attr($product_id); ?>">
-                                            <input type="hidden" name="product_id" value="<?php echo esc_attr($product_id); ?>">
-                                            <input type="hidden" name="variation_id" class="variation_id" value="0">
+                        <?php
+                        wc_dropdown_variation_attribute_options([
+                            'options'          => $options,
+                            'attribute'        => $attribute_name,
+                            'product'          => $product,
+                            'class'            => 'itchenking-variation-select',
+                            'show_option_none' => 'Choose ' . wc_attribute_label($attribute_name),
+                        ]);
+                        ?>
+                    </div>
+                <?php endforeach; ?>
 
-                                            <button type="submit"
-                                                    class="button single_add_to_cart_button itchenking-add-variable-product disabled"
-                                                    disabled>
-                                                <?php esc_html_e('Choose Option', 'itchenking-upsell'); ?>
-                                            </button>
-                                        </form>
+            </div>
 
-                                    <?php endif; ?>
+            <input type="hidden" name="variation_id" class="variation_id" value="0">
 
-                                <?php endif; ?>
+            <button type="button"
+                    class="button itchenking-add-variable-product disabled"
+                    data-product_id="<?php echo esc_attr($product_id); ?>"
+                    disabled>
+                <?php esc_html_e('Choose Option', 'itchenking-upsell'); ?>
+            </button>
+
+        </form>
+
+    <?php endif; ?>
+
+<?php endif; ?>
 
                                 <div class="itchenking-card-message" aria-live="polite"></div>
 
