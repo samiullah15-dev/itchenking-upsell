@@ -1,21 +1,21 @@
 jQuery(function ($) {
 
+    function normalizeValue(value) {
+        return String(value || "").trim();
+    }
+
     function getProductVariations(form) {
-        let variations = form.data("product_variations");
+        let variations = form.attr("data-product_variations");
 
         if (!variations) {
-            let raw = form.attr("data-product_variations");
-
-            if (raw) {
-                try {
-                    variations = JSON.parse(raw);
-                } catch (e) {
-                    variations = [];
-                }
-            }
+            return [];
         }
 
-        return variations || [];
+        try {
+            return JSON.parse(variations);
+        } catch (e) {
+            return [];
+        }
     }
 
     function getChosenAttributes(form) {
@@ -25,7 +25,7 @@ jQuery(function ($) {
 
         form.find("select[name^='attribute_']").each(function () {
             let name = $(this).attr("name");
-            let value = $(this).val();
+            let value = normalizeValue($(this).val());
 
             count++;
 
@@ -48,10 +48,10 @@ jQuery(function ($) {
             let matched = true;
 
             for (let attrName in variation.attributes) {
-                let variationValue = variation.attributes[attrName];
-                let selectedValue = selectedAttributes[attrName];
+                let variationValue = normalizeValue(variation.attributes[attrName]);
+                let selectedValue = normalizeValue(selectedAttributes[attrName]);
 
-                if (variationValue && variationValue !== selectedValue) {
+                if (variationValue !== "" && variationValue !== selectedValue) {
                     matched = false;
                     break;
                 }
@@ -70,7 +70,8 @@ jQuery(function ($) {
 
         form.find(".itchenking-add-variable-product")
             .prop("disabled", false)
-            .removeClass("disabled");
+            .removeClass("disabled")
+            .text("Add to Cart");
     }
 
     function disableVariableButton(form) {
@@ -78,7 +79,31 @@ jQuery(function ($) {
 
         form.find(".itchenking-add-variable-product")
             .prop("disabled", true)
-            .addClass("disabled");
+            .addClass("disabled")
+            .text("Choose Option");
+    }
+
+    function checkVariableSelection(form) {
+        let selected = getChosenAttributes(form);
+
+        if (selected.count === 0 || selected.count !== selected.chosen) {
+            disableVariableButton(form);
+            return;
+        }
+
+        let variations = getProductVariations(form);
+        let matchedVariation = findMatchingVariation(variations, selected.attributes);
+
+        if (
+            matchedVariation &&
+            matchedVariation.variation_id &&
+            matchedVariation.is_purchasable !== false &&
+            matchedVariation.is_in_stock !== false
+        ) {
+            enableVariableButton(form, matchedVariation.variation_id);
+        } else {
+            disableVariableButton(form);
+        }
     }
 
     function initUpsellSlider() {
@@ -110,11 +135,11 @@ jQuery(function ($) {
         $(".itchenking-variable-form").each(function () {
             let form = $(this);
 
+            disableVariableButton(form);
+
             if (typeof form.wc_variation_form === "function") {
                 form.wc_variation_form();
             }
-
-            disableVariableButton(form);
 
             form.off(".itchenkingVariation");
 
@@ -127,46 +152,23 @@ jQuery(function ($) {
                 ) {
                     enableVariableButton(form, variation.variation_id);
                 } else {
-                    disableVariableButton(form);
+                    checkVariableSelection(form);
                 }
             });
 
             form.on("reset_data.itchenkingVariation hide_variation.itchenkingVariation", function () {
-                disableVariableButton(form);
+                checkVariableSelection(form);
             });
 
-            form.find("select[name^='attribute_']").off("change.itchenkingVariation").on("change.itchenkingVariation", function () {
-                setTimeout(function () {
-                    let selected = getChosenAttributes(form);
+            form.find("select[name^='attribute_']")
+                .off("change.itchenkingVariation")
+                .on("change.itchenkingVariation", function () {
+                    setTimeout(function () {
+                        checkVariableSelection(form);
+                    }, 150);
+                });
 
-                    if (selected.count !== selected.chosen) {
-                        disableVariableButton(form);
-                        return;
-                    }
-
-                    let currentVariationId = parseInt(form.find(".variation_id").val(), 10) || 0;
-
-                    if (currentVariationId > 0) {
-                        enableVariableButton(form, currentVariationId);
-                        return;
-                    }
-
-                    let variations = getProductVariations(form);
-                    let matchedVariation = findMatchingVariation(variations, selected.attributes);
-
-                    if (
-                        matchedVariation &&
-                        matchedVariation.variation_id &&
-                        matchedVariation.is_purchasable !== false &&
-                        matchedVariation.is_in_stock !== false
-                    ) {
-                        enableVariableButton(form, matchedVariation.variation_id);
-                    } else {
-                        disableVariableButton(form);
-                    }
-
-                }, 100);
-            });
+            checkVariableSelection(form);
         });
     }
 
@@ -225,6 +227,9 @@ jQuery(function ($) {
 
         let button = $(this);
         let form = button.closest(".itchenking-variable-form");
+
+        checkVariableSelection(form);
+
         let selected = getChosenAttributes(form);
         let variationId = parseInt(form.find(".variation_id").val(), 10) || 0;
 
