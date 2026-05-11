@@ -275,4 +275,7 @@
     .itchenking-product-card {
         padding: 12px;
     }
+    .itchenking-swiper .swiper-slide {
+        width: 100% !important;
+    }
 }
