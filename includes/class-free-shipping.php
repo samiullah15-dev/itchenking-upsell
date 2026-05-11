@@ -31,7 +31,7 @@ class ItchenKing_Free_Shipping {
      */
     public static function get_threshold() {
 
-        $fallback = 5000;
+        $fallback = 50;
         $amounts  = [];
 
         if (class_exists('WC_Shipping_Zones')) {
