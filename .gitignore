@@ -1,0 +1,59 @@
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor / IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+debug.log
+error_log
+
+# WordPress debug files
+wp-content/debug.log
+
+# Environment files
+.env
+.env.*
+*.local
+
+# Dependency folders
+node_modules/
+vendor/
+
+# Build / cache folders
+dist/
+build/
+.cache/
+.tmp/
+temp/
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*.swp
+
+# Archive files
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
+# Database files
+*.sql
+*.sqlite
+*.db
+
+# Mac resource files
+__MACOSX/
+
+# Composer lock optional
+# Keep composer.lock if this is an application.
+# Ignore only if this is a reusable plugin/package.
+# composer.lock
