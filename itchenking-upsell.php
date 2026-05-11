@@ -1,7 +1,7 @@
 <?php
 /**
  * Plugin Name: ItchenKing Upsell Free Shipping
- * Plugin URI: https://github.com/your-username/itchenking-upsell
+ * Plugin URI: https://github.com/samiullah15-dev/itchenking-upsell
  * Description: WooCommerce free delivery upsell widget with progress bar, product slider, and AJAX add to cart for simple and variable products on cart and checkout pages.
  * Version: 1.0.0
  * Author: Your Name
