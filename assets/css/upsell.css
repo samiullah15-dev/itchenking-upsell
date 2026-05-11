@@ -278,4 +278,55 @@
     .itchenking-swiper .swiper-slide {
         width: 100% !important;
     }
+        .itchenking-variable-form {
+        width: 100%;
+        margin-top: 4px;
+    }
+
+    .itchenking-variation-table,
+    .itchenking-variable-form table.variations {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    .itchenking-variation-table tr,
+    .itchenking-variable-form table.variations tr {
+        display: block;
+        width: 100%;
+        margin-bottom: 8px;
+    }
+
+    .itchenking-variation-table td,
+    .itchenking-variable-form table.variations td {
+        display: block;
+        width: 100%;
+        padding: 0;
+    }
+
+    .itchenking-variation-table label,
+    .itchenking-variable-form table.variations label {
+        font-size: 13px;
+        font-weight: 600;
+        color: #242e42;
+        margin-bottom: 5px;
+    }
+
+    .itchenking-variable-form select,
+    .itchenking-variation-select {
+        width: 100% !important;
+        min-height: 42px;
+        font-size: 14px;
+        padding: 9px 10px;
+        border-radius: 10px;
+        border: 1px solid #d7d7d7;
+        background-color: #ffffff;
+        color: #242e42;
+    }
+
+    .itchenking-add-variable-product {
+        width: 100% !important;
+        min-height: 44px;
+        margin-top: 4px;
+    }
+
 }
