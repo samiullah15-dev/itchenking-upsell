@@ -7,19 +7,15 @@ if (!defined('ABSPATH')) {
 class ItchenKing_Upsell_Query {
 
     /**
-     * Get products close to the remaining amount needed for free shipping.
+     * Show 10 lowest priced products when any amount remains for free shipping.
      *
      * Example:
      * Free delivery threshold = £50
      * Cart total = £30
      * Remaining = £20
      *
-     * Product priority:
-     * 1. £20 to £30
-     * 2. £15 to £30
-     * 3. £10 to £30
-     *
-     * It will NOT show expensive products like £50, £70, £120 unless your remaining amount is close to that.
+     * Slider will show the 10 lowest priced in-stock visible products,
+     * excluding products already in the cart.
      */
     public static function get_products($remaining, $exclude = []) {
 
@@ -30,44 +26,9 @@ class ItchenKing_Upsell_Query {
             return [];
         }
 
-        /*
-         * Main max range.
-         * If remaining is £20, never show products above £30.
-         */
-        $max_price = $remaining + 10;
-
-        /*
-         * First try exact unlock range:
-         * Remaining £20 = show £20 to £30.
-         */
-        $products = self::query_products($remaining, $max_price, $exclude);
-
-        /*
-         * Fallback 1:
-         * If no product found, include slightly cheaper products:
-         * Remaining £20 = show £15 to £30.
-         */
-        if (empty($products)) {
-            $products = self::query_products(max(1, $remaining - 5), $max_price, $exclude);
-        }
-
-        /*
-         * Fallback 2:
-         * If still empty, include more cheaper products:
-         * Remaining £20 = show £10 to £30.
-         */
-        if (empty($products)) {
-            $products = self::query_products(max(1, $remaining - 10), $max_price, $exclude);
-        }
-
-        return $products;
-    }
-
-    private static function query_products($min_price, $max_price, $exclude = []) {
-
         $products = wc_get_products([
             'status'             => 'publish',
-            'limit'              => 24,
+            'limit'              => 20,
             'exclude'            => $exclude,
             'stock_status'       => 'instock',
             'type'               => ['simple', 'variable'],
@@ -75,20 +36,8 @@ class ItchenKing_Upsell_Query {
             'orderby'            => 'price',
             'order'              => 'ASC',
             'return'             => 'objects',
-            'meta_query'         => [
-                [
-                    'key'     => '_price',
-                    'value'   => [(float) $min_price, (float) $max_price],
-                    'compare' => 'BETWEEN',
-                    'type'    => 'DECIMAL(10,2)',
-                ],
-            ],
         ]);
 
-        /*
-         * Extra safety filter.
-         * This prevents WooCommerce/theme/query conflicts from showing expensive products.
-         */
         $filtered = [];
 
         foreach ($products as $product) {
@@ -98,18 +47,15 @@ class ItchenKing_Upsell_Query {
 
             $price = (float) $product->get_price();
 
-            if ($price >= $min_price && $price <= $max_price) {
+            if ($price > 0) {
                 $filtered[] = $product;
             }
         }
 
-        /*
-         * Sort by lowest price first.
-         */
         usort($filtered, function ($a, $b) {
             return (float) $a->get_price() <=> (float) $b->get_price();
         });
 
-        return array_slice($filtered, 0, 12);
+        return array_slice($filtered, 0, 10);
     }
 }
