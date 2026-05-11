@@ -113,7 +113,7 @@ jQuery(function ($) {
             }
 
             window.itchenkingSwiper = new Swiper(".itchenking-swiper", {
-                slidesPerView: 2,
+                slidesPerView: 1,
                 spaceBetween: 15,
                 navigation: {
                     nextEl: ".swiper-button-next",
@@ -121,7 +121,7 @@ jQuery(function ($) {
                 },
                 breakpoints: {
                     768: {
-                        slidesPerView: 3
+                        slidesPerView: 2
                     },
                     1200: {
                         slidesPerView: 4
