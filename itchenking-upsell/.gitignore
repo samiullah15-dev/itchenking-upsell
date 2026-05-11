@@ -1,0 +1,55 @@
+# Git metadata from accidental zips
+.git/
+
+# OS files
+.DS_Store
+Thumbs.db
+__MACOSX/
+
+# Editor / IDE files
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Logs
+*.log
+debug.log
+error_log
+
+# WordPress debug files
+wp-content/debug.log
+
+# Environment / secrets
+.env
+.env.*
+*.local
+
+# Dependency folders
+node_modules/
+vendor/
+
+# Build / cache folders
+dist/
+build/
+.cache/
+.tmp/
+temp/
+
+# Backup files
+*.bak
+*.backup
+*.old
+*.orig
+*.swp
+
+# Archives
+*.zip
+*.tar
+*.tar.gz
+*.rar
+
+# Database exports
+*.sql
+*.sqlite
+*.db
