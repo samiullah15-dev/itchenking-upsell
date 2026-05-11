@@ -1,18 +1,98 @@
-(function ($) {
-    'use strict';
+jQuery(function ($) {
 
-    function initSwiper() {
-        if (window.kitchenKingSwiper && typeof window.kitchenKingSwiper.destroy === 'function') {
-            window.kitchenKingSwiper.destroy(true, true);
+    function getProductVariations(form) {
+        let variations = form.data("product_variations");
+
+        if (!variations) {
+            let raw = form.attr("data-product_variations");
+
+            if (raw) {
+                try {
+                    variations = JSON.parse(raw);
+                } catch (e) {
+                    variations = [];
+                }
+            }
         }
 
-        if ($('.itchenking-swiper').length && typeof Swiper !== 'undefined') {
-            window.kitchenKingSwiper = new Swiper('.itchenking-swiper', {
+        return variations || [];
+    }
+
+    function getChosenAttributes(form) {
+        let attributes = {};
+        let count = 0;
+        let chosen = 0;
+
+        form.find("select[name^='attribute_']").each(function () {
+            let name = $(this).attr("name");
+            let value = $(this).val();
+
+            count++;
+
+            if (value) {
+                chosen++;
+                attributes[name] = value;
+            }
+        });
+
+        return {
+            count: count,
+            chosen: chosen,
+            attributes: attributes
+        };
+    }
+
+    function findMatchingVariation(variations, selectedAttributes) {
+        for (let i = 0; i < variations.length; i++) {
+            let variation = variations[i];
+            let matched = true;
+
+            for (let attrName in variation.attributes) {
+                let variationValue = variation.attributes[attrName];
+                let selectedValue = selectedAttributes[attrName];
+
+                if (variationValue && variationValue !== selectedValue) {
+                    matched = false;
+                    break;
+                }
+            }
+
+            if (matched) {
+                return variation;
+            }
+        }
+
+        return false;
+    }
+
+    function enableVariableButton(form, variationId) {
+        form.find(".variation_id").val(variationId);
+
+        form.find(".itchenking-add-variable-product")
+            .prop("disabled", false)
+            .removeClass("disabled");
+    }
+
+    function disableVariableButton(form) {
+        form.find(".variation_id").val(0);
+
+        form.find(".itchenking-add-variable-product")
+            .prop("disabled", true)
+            .addClass("disabled");
+    }
+
+    function initUpsellSlider() {
+        if (typeof Swiper !== "undefined" && $(".itchenking-swiper").length) {
+            if (window.itchenkingSwiper) {
+                window.itchenkingSwiper.destroy(true, true);
+            }
+
+            window.itchenkingSwiper = new Swiper(".itchenking-swiper", {
                 slidesPerView: 2,
                 spaceBetween: 15,
                 navigation: {
-                    nextEl: '.swiper-button-next',
-                    prevEl: '.swiper-button-prev'
+                    nextEl: ".swiper-button-next",
+                    prevEl: ".swiper-button-prev"
                 },
                 breakpoints: {
                     768: {
@@ -26,143 +106,144 @@
         }
     }
 
-    function initVariations() {
-        $('.itchenking-variation-form').each(function () {
-            var form = $(this);
+    function initVariableForms() {
+        $(".itchenking-variable-form").each(function () {
+            let form = $(this);
 
-            if ($.fn.wc_variation_form) {
+            if (typeof form.wc_variation_form === "function") {
                 form.wc_variation_form();
             }
 
-            form.off('.itchenking');
+            disableVariableButton(form);
 
-            form.on('found_variation.itchenking', function (event, variation) {
-                form.find('.variation_id').val(variation.variation_id);
-                form.find('.itchenking-add-variable-product')
-                    .removeClass('disabled')
-                    .prop('disabled', false)
-                    .text('Add to Cart');
+            form.off(".itchenkingVariation");
+
+            form.on("found_variation.itchenkingVariation", function (event, variation) {
+                if (
+                    variation &&
+                    variation.variation_id &&
+                    variation.is_purchasable !== false &&
+                    variation.is_in_stock !== false
+                ) {
+                    enableVariableButton(form, variation.variation_id);
+                } else {
+                    disableVariableButton(form);
+                }
             });
 
-            form.on('reset_data.itchenking hide_variation.itchenking', function () {
-                form.find('.variation_id').val(0);
-                form.find('.itchenking-add-variable-product')
-                    .addClass('disabled')
-                    .prop('disabled', true)
-                    .text('Choose Option');
+            form.on("reset_data.itchenkingVariation hide_variation.itchenkingVariation", function () {
+                disableVariableButton(form);
             });
 
-            form.find('select').off('change.itchenking').on('change.itchenking', function () {
-                form.trigger('check_variations');
+            form.find("select[name^='attribute_']").off("change.itchenkingVariation").on("change.itchenkingVariation", function () {
+                setTimeout(function () {
+                    let selected = getChosenAttributes(form);
+
+                    if (selected.count !== selected.chosen) {
+                        disableVariableButton(form);
+                        return;
+                    }
+
+                    let currentVariationId = parseInt(form.find(".variation_id").val(), 10) || 0;
+
+                    if (currentVariationId > 0) {
+                        enableVariableButton(form, currentVariationId);
+                        return;
+                    }
+
+                    let variations = getProductVariations(form);
+                    let matchedVariation = findMatchingVariation(variations, selected.attributes);
+
+                    if (
+                        matchedVariation &&
+                        matchedVariation.variation_id &&
+                        matchedVariation.is_purchasable !== false &&
+                        matchedVariation.is_in_stock !== false
+                    ) {
+                        enableVariableButton(form, matchedVariation.variation_id);
+                    } else {
+                        disableVariableButton(form);
+                    }
+
+                }, 100);
             });
         });
     }
 
-    function initUpsell() {
-        initSwiper();
-        initVariations();
-    }
-
-    function collectAttributes(form) {
-        var attributes = {};
-
-        form.find('select[name^="attribute_"]').each(function () {
-            var select = $(this);
-            attributes[select.attr('name')] = select.val();
-        });
-
-        return attributes;
-    }
-
-    function refreshWooCommerceAreas() {
-        $(document.body).trigger('wc_fragment_refresh');
-        $(document.body).trigger('wc_update_cart');
-        $(document.body).trigger('update_checkout');
-        $(document.body).trigger('added_to_cart');
-    }
-
-    function replaceWidget(html) {
-        if (!html) {
-            return;
+    function refreshAfterAdd(response) {
+        if (response.success && response.data && response.data.widget) {
+            $(".itchenking-upsell-wrapper").replaceWith(response.data.widget);
         }
 
-        $('.itchenking-upsell-wrapper').first().replaceWith(html);
-        initUpsell();
+        $(document.body).trigger("added_to_cart");
+        $(document.body).trigger("wc_fragment_refresh");
+        $(document.body).trigger("update_checkout");
+
+        initUpsellSlider();
+        initVariableForms();
     }
 
-    function ajaxAddToCart(payload, button, card) {
-        button.addClass('loading').prop('disabled', true);
-        card.find('.itchenking-card-message').text('');
+    function addProductToCart(data, button) {
+        button.addClass("loading").prop("disabled", true);
 
         $.ajax({
             url: itchenking_ajax.ajaxurl,
-            type: 'POST',
-            dataType: 'json',
-            data: $.extend({
-                action: 'itchenking_add_to_cart',
-                nonce: itchenking_ajax.nonce
-            }, payload),
+            type: "POST",
+            data: data,
             success: function (response) {
-                if (response && response.success) {
-                    replaceWidget(response.data.widget);
-                    refreshWooCommerceAreas();
+                if (response.success) {
+                    refreshAfterAdd(response);
                 } else {
-                    var message = response && response.data && response.data.message
-                        ? response.data.message
-                        : 'Product could not be added.';
-
-                    card.find('.itchenking-card-message').text(message);
-                    button.removeClass('loading').prop('disabled', false);
+                    alert(response.data && response.data.message ? response.data.message : "Could not add product.");
+                    button.removeClass("loading").prop("disabled", false);
                 }
             },
             error: function () {
-                card.find('.itchenking-card-message').text('Something went wrong. Please try again.');
-                button.removeClass('loading').prop('disabled', false);
+                alert("AJAX error. Please try again.");
+                button.removeClass("loading").prop("disabled", false);
             }
         });
     }
 
-    $(document).on('click', '.itchenking-add-simple-product', function (event) {
-        event.preventDefault();
+    $(document).on("click", ".itchenking-add-simple-product", function (e) {
+        e.preventDefault();
 
-        var button = $(this);
-        var card = button.closest('.itchenking-product-card');
+        let button = $(this);
 
-        ajaxAddToCart({
-            product_id: button.data('product_id'),
-            quantity: button.data('quantity') || 1,
+        addProductToCart({
+            action: "itchenking_add_to_cart",
+            nonce: itchenking_ajax.nonce,
+            product_id: button.data("product_id"),
+            quantity: button.data("quantity") || 1,
             variation_id: 0,
             attributes: {}
-        }, button, card);
+        }, button);
     });
 
-    $(document).on('submit', '.itchenking-variation-form', function (event) {
-        event.preventDefault();
+    $(document).on("click", ".itchenking-add-variable-product", function (e) {
+        e.preventDefault();
 
-        var form = $(this);
-        var button = form.find('.itchenking-add-variable-product');
-        var card = form.closest('.itchenking-product-card');
-        var variationId = parseInt(form.find('.variation_id').val(), 10) || 0;
+        let button = $(this);
+        let form = button.closest(".itchenking-variable-form");
+        let selected = getChosenAttributes(form);
+        let variationId = parseInt(form.find(".variation_id").val(), 10) || 0;
 
-        if (!variationId) {
-            card.find('.itchenking-card-message').text('Please select product options.');
+        if (selected.count !== selected.chosen || !variationId) {
+            alert("Please select product options.");
             return;
         }
 
-        ajaxAddToCart({
-            product_id: form.data('product_id'),
-            quantity: form.find('input[name="quantity"]').val() || 1,
+        addProductToCart({
+            action: "itchenking_add_to_cart",
+            nonce: itchenking_ajax.nonce,
+            product_id: button.data("product_id"),
+            quantity: 1,
             variation_id: variationId,
-            attributes: collectAttributes(form)
-        }, button, card);
+            attributes: selected.attributes
+        }, button);
     });
 
-    $(document).ready(function () {
-        initUpsell();
-    });
+    initUpsellSlider();
+    initVariableForms();
 
-    $(document.body).on('updated_checkout updated_wc_div', function () {
-        initUpsell();
-    });
-
-})(jQuery);
+});
