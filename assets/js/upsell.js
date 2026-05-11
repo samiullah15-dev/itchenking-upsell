@@ -29,7 +29,6 @@ function initUpsell() {
     }
 
     // VARIABLE PRODUCTS
-// VARIABLE PRODUCTS FIX
 jQuery(function ($) {
 
     function initVariations() {
