@@ -136,6 +136,7 @@ class ItchenKing_Admin_Settings {
                             <?php esc_html_e('Select Products', 'itchenking-upsell'); ?>
                         </th>
                         <td>
+                            <div class="itchenking-product-select-wrap">
                             <select
                                 id="itchenking_manual_products"
                                 name="itchenking_settings[manual_product_ids][]"
@@ -154,6 +155,7 @@ class ItchenKing_Admin_Settings {
                                     </option>
                                 <?php endforeach; ?>
                             </select>
+                            </div>
 
                             <p class="description">
                                 Select products manually. These products will be shown in the slider first, in the same selected order.
