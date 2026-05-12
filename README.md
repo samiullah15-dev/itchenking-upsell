@@ -81,7 +81,11 @@ Finds the free delivery threshold and calculates current progress.
 
 ### `includes/class-upsell-query.php`
 
-Finds recommended products near the remaining amount needed for free delivery.
+Shows manually selected products if configured.
+Otherwise shows the lowest-priced WooCommerce products.
+Excludes products already in cart.
+Only shows visible, purchasable, in-stock products.
+Supports simple and variable products.
 
 ### `includes/class-ajax-handler.php`
 
