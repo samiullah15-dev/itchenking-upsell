@@ -48,14 +48,14 @@ itchenking-upsell/
 1. Upload the `itchenking-upsell` folder to:
 
 ```txt
-wp-content/plugins/
+wp-content/plugins/ or Plugins > Add New Plugin > Upload Plugin
 ```
 
 2. Open WordPress admin.
 3. Go to **Plugins > Installed Plugins**.
 4. Activate **ItchenKing Upsell Free Shipping**.
 5. Open the cart or checkout page and test the widget.
-
+6. WooCommerce > ItchenKing Upsell
 ## How It Works
 
 1. The plugin checks the current cart product subtotal.
@@ -134,6 +134,8 @@ README.md
 .gitignore
 ```
 
-## Version
+## Versions
 
-1.0.1
+1.0.0 first stable version
+1.0.1 small bug fix
+1.0.2 major rewrite latest
