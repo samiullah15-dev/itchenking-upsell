@@ -56,29 +56,54 @@ class ItchenKing_Admin_Settings {
     }
 
     public function enqueue_admin_assets($hook) {
-        if ($hook !== 'woocommerce_page_itchenking-upsell') {
-            return;
-        }
+    if ($hook !== 'woocommerce_page_itchenking-upsell') {
+        return;
+    }
 
-        wp_enqueue_style('wp-color-picker');
-        wp_enqueue_script('wp-color-picker');
+    wp_enqueue_style('wp-color-picker');
+    wp_enqueue_script('wp-color-picker');
 
-        wp_enqueue_script('selectWoo');
-        wp_enqueue_style('select2');
-
+    /*
+     * Load WooCommerce SelectWoo properly.
+     * This fixes broken product search UI.
+     */
+    if (defined('WC_VERSION') && function_exists('WC')) {
         wp_enqueue_script(
-            'itchenking-admin-settings',
-            ITCHENKING_URL . 'assets/js/admin-settings.js',
-            ['jquery', 'wp-color-picker', 'selectWoo'],
-            ITCHENKING_VERSION,
+            'selectWoo',
+            WC()->plugin_url() . '/assets/js/selectWoo/selectWoo.full.min.js',
+            ['jquery'],
+            WC_VERSION,
             true
         );
 
-        wp_localize_script('itchenking-admin-settings', 'itchenking_admin', [
-            'ajaxurl' => admin_url('admin-ajax.php'),
-            'nonce'   => wp_create_nonce('itchenking_admin_nonce'),
-        ]);
+        wp_enqueue_style(
+            'select2',
+            WC()->plugin_url() . '/assets/css/select2.css',
+            [],
+            WC_VERSION
+        );
     }
+
+    wp_enqueue_style(
+        'itchenking-admin-settings',
+        ITCHENKING_URL . 'assets/css/admin-settings.css',
+        ['wp-color-picker'],
+        ITCHENKING_VERSION
+    );
+
+    wp_enqueue_script(
+        'itchenking-admin-settings',
+        ITCHENKING_URL . 'assets/js/admin-settings.js',
+        ['jquery', 'wp-color-picker', 'selectWoo'],
+        ITCHENKING_VERSION,
+        true
+    );
+
+    wp_localize_script('itchenking-admin-settings', 'itchenking_admin', [
+        'ajaxurl' => admin_url('admin-ajax.php'),
+        'nonce'   => wp_create_nonce('itchenking_admin_nonce'),
+    ]);
+}
 
     public function render_settings_page() {
         if (!current_user_can('manage_woocommerce')) {
