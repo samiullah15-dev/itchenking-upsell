@@ -99,6 +99,21 @@ Frontend JavaScript for Swiper, WooCommerce variation selection, and AJAX add to
 
 Frontend styling for the widget, product cards, variation fields, progress bar, and buttons.
 
+### assets/js/admin-settings.js
+
+WordPress color picker
+WooCommerce SelectWoo product search
+Product search with image preview
+Manual product selector UI
+
+### assets/css/admin-settings.css
+
+Admin settings page styling.Settings cards
+Product selector styling
+Search dropdown styling
+Color field layout
+Typography field layou
+
 ## AJAX Actions
 
 ```php
