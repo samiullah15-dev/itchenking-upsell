@@ -16,17 +16,24 @@ A custom WooCommerce plugin that shows a free-delivery progress bar and recommen
 - Excludes products already in cart
 - Shows only purchasable, in-stock products
 - Reads WooCommerce Free Shipping minimum amount when available
+- Customization options for button colors, slider arrows, progress bar, text colors, product title/price colors, typography, and font sizes
+- Admin settings page under WooCommerce
+- Manual product selection for slider
+- Product search with image preview in admin
 
-## Folder Structure
+## Folder Structure 
 
 ```txt
 itchenking-upsell/
 ├── assets/
 │   ├── css/
-│   │   └── upsell.css
+│   │   ├── upsell.css
+│   │   └── admin-settings.css
 │   └── js/
-│       └── upsell.js
+│       ├── upsell.js
+│       └── admin-settings.js
 ├── includes/
+│   ├── class-admin-settings.php
 │   ├── class-ajax-handler.php
 │   ├── class-free-shipping.php
 │   └── class-upsell-query.php
@@ -42,6 +49,8 @@ itchenking-upsell/
 - WordPress
 - WooCommerce
 - PHP 7.4 or higher recommended
+- jQuery
+- WooCommerce cart and checkout pages
 
 ## Installation
 
@@ -73,7 +82,7 @@ wp-content/plugins/ or Plugins > Add New Plugin > Upload Plugin
 
 ### `itchenking-upsell.php`
 
-Main plugin file. Loads constants, WooCommerce checks, scripts, styles, hooks, and required classes.
+Main plugin file. Loads constants, WooCommerce checks, scripts, styles, hooks, and required classes, Dynamic frontend CSS from admin settings, Admin CSS and JS loading.
 
 ### `includes/class-free-shipping.php`
 
