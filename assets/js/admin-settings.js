@@ -8,25 +8,32 @@ jQuery(function ($) {
         }
 
         let image = product.image ? product.image : "";
+        let title = product.text ? product.text : "";
         let price = product.price ? product.price : "";
 
         return $(
-            '<div style="display:flex;align-items:center;gap:10px;">' +
-                '<img src="' + image + '" style="width:38px;height:38px;object-fit:cover;border-radius:4px;border:1px solid #ddd;">' +
+            '<div class="itchenking-product-result">' +
+                '<img src="' + image + '" alt="">' +
                 '<div>' +
-                    '<div style="font-weight:600;">' + product.text + '</div>' +
-                    '<div style="font-size:12px;color:#666;">' + price + '</div>' +
+                    '<div class="itchenking-product-result-title">' + title + '</div>' +
+                    '<div class="itchenking-product-result-price">' + price + '</div>' +
                 '</div>' +
             '</div>'
         );
     }
 
-    if ($("#itchenking_manual_products").length && $.fn.selectWoo) {
-        $("#itchenking_manual_products").selectWoo({
+    function formatSelection(product) {
+        return product.text || product.id;
+    }
+
+    let productSelect = $("#itchenking_manual_products");
+
+    if (productSelect.length && $.fn.selectWoo) {
+        productSelect.selectWoo({
             ajax: {
                 url: itchenking_admin.ajaxurl,
                 dataType: "json",
-                delay: 250,
+                delay: 300,
                 data: function (params) {
                     return {
                         action: "itchenking_product_search",
@@ -36,18 +43,18 @@ jQuery(function ($) {
                 },
                 processResults: function (data) {
                     return data;
-                }
+                },
+                cache: true
             },
             templateResult: formatProduct,
-            templateSelection: function (product) {
-                return product.text || product.id;
-            },
+            templateSelection: formatSelection,
             escapeMarkup: function (markup) {
                 return markup;
             },
             minimumInputLength: 1,
             width: "100%",
-            placeholder: "Search and select products"
+            placeholder: "Search products...",
+            closeOnSelect: true
         });
     }
 
