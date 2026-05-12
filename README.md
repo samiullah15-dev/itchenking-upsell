@@ -73,10 +73,45 @@ wp-content/plugins/ or Plugins > Add New Plugin > Upload Plugin
    - Remaining amount
    - Progress bar
    - Recommended product slider
-4. Simple products can be added instantly with AJAX.
-5. Variable products show variation dropdowns inside the slider.
-6. After a valid variation is selected, the customer can add it without visiting the product page.
-7. After add to cart, the widget, cart fragments, cart page, and checkout review are refreshed.
+1. If manual products are selected in admin settings, those products are shown in the slider.
+2. If no manual products are selected, the plugin shows the lowest-priced available WooCommerce products.
+3. Simple products can be added instantly with AJAX.
+4. Variable products show variation dropdowns inside the slider.
+5. After a valid variation is selected, the customer can add it without  visiting the product page.
+6. After add to cart, the widget, cart fragments, cart page, and checkout review are refreshed.
+7. When the cart reaches the free delivery threshold, the plugin shows the free delivery unlocked message.
+
+### Admin Settings
+
+
+- WooCommerce > ItchenKing Upsell
+
+1. Manual Slider Products
+
+2. You can manually search and select WooCommerce products for the slider.
+
+3. If products are selected manually, the slider will show those products first.
+
+4. If no manual products are selected, the plugin automatically shows the lowest-priced visible, purchasable, in-stock WooCommerce products.
+
+### Available style
+
+Button background color
+Button text color
+Button hover background color
+Slider arrow color
+Progress bar color
+Main text color
+Highlighted amount color
+Product title color
+Product price color
+
+- Typography
+
+Font family
+Product title font size
+Product price font size
+Button font size
 
 ## Main Files
 
