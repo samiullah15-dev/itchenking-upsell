@@ -138,4 +138,4 @@ README.md
 
 1.0.0 first stable version
 1.0.1 small bug fix
-1.0.2 major rewrite latest
+1.1.0 major rewrite latest
