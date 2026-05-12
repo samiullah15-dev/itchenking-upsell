@@ -32,8 +32,10 @@ add_action('plugins_loaded', function () {
     require_once ITCHENKING_PATH . 'includes/class-free-shipping.php';
     require_once ITCHENKING_PATH . 'includes/class-upsell-query.php';
     require_once ITCHENKING_PATH . 'includes/class-ajax-handler.php';
+    require_once ITCHENKING_PATH . 'includes/class-admin-settings.php';
 
     new ItchenKing_Ajax_Handler();
+    new ItchenKing_Admin_Settings();
 });
 
 /**
