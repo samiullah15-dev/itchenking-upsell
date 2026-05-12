@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('ITCHENKING_VERSION', '1.0.1');
+define('ITCHENKING_VERSION', '1.0.2');
 define('ITCHENKING_PATH', plugin_dir_path(__FILE__));
 define('ITCHENKING_URL', plugin_dir_url(__FILE__));
 
