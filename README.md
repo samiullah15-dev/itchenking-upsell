@@ -17,7 +17,7 @@ A custom WooCommerce plugin that shows a free-delivery progress bar and recommen
 - Shows only purchasable, in-stock products
 - Reads WooCommerce Free Shipping minimum amount when available
 - Customization options for button colors, slider arrows, progress bar, text colors, product title/price colors, typography, and font sizes
-- Admin settings page under WooCommerc
+- Admin settings page under WooCommerce
 - Manual product selection for slider
 - Product search with image preview in admin
 
