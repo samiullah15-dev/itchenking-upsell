@@ -5,10 +5,6 @@ if (!defined('ABSPATH')) {
 }
 
 class ItchenKing_Upsell_Query {
-
-    /**
-     * Show 10 lowest priced WooCommerce products when cart is below free shipping threshold.
-     */
     public static function get_products($remaining, $exclude = []) {
 
         $remaining = (float) $remaining;
@@ -17,6 +13,54 @@ class ItchenKing_Upsell_Query {
         if ($remaining <= 0) {
             return [];
         }
+
+        $manual_products = self::get_manual_products($exclude);
+
+        if (!empty($manual_products)) {
+            return $manual_products;
+        }
+
+        return self::get_lowest_price_products($exclude);
+    }
+
+    private static function get_manual_products($exclude = []) {
+
+        if (!class_exists('ItchenKing_Admin_Settings')) {
+            return [];
+        }
+
+        $settings = ItchenKing_Admin_Settings::get_settings();
+
+        if (empty($settings['manual_product_ids']) || !is_array($settings['manual_product_ids'])) {
+            return [];
+        }
+
+        $products = [];
+
+        foreach ($settings['manual_product_ids'] as $product_id) {
+            $product_id = absint($product_id);
+
+            if (!$product_id || in_array($product_id, $exclude, true)) {
+                continue;
+            }
+
+            $product = wc_get_product($product_id);
+
+            if (!$product || !$product->is_purchasable() || !$product->is_in_stock()) {
+                continue;
+            }
+
+            if (!$product->is_type(['simple', 'variable'])) {
+                continue;
+            }
+
+            $products[] = $product;
+        }
+
+        return array_slice($products, 0, 10);
+    }
+
+    private static function get_lowest_price_products($exclude = []) {
 
         $products = wc_get_products([
             'status'             => 'publish',
@@ -33,11 +77,7 @@ class ItchenKing_Upsell_Query {
         $filtered = [];
 
         foreach ($products as $product) {
-            if (!$product || !$product->is_type(['simple', 'variable'])) {
-                continue;
-            }
-
-            if (!$product->is_purchasable() || !$product->is_in_stock()) {
+            if (!$product || !$product->is_purchasable() || !$product->is_in_stock()) {
                 continue;
             }
 
@@ -54,6 +94,6 @@ class ItchenKing_Upsell_Query {
             return (float) $a->get_price() <=> (float) $b->get_price();
         });
 
-        return array_slice($filtered, 0, 15);
+        return array_slice($filtered, 0, 10);
     }
 }
