@@ -5,11 +5,6 @@ if (!defined('ABSPATH')) {
 }
 
 class ItchenKing_Upsell_Query {
-
-    /**
-     * If manual products are selected in admin, show them.
-     * Otherwise show 10 lowest priced WooCommerce products.
-     */
     public static function get_products($remaining, $exclude = []) {
 
         $remaining = (float) $remaining;
