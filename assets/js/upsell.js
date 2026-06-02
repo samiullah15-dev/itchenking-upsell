@@ -193,8 +193,10 @@ jQuery(function ($) {
         $(document.body).trigger("wc_fragment_refresh");
         $(document.body).trigger("update_checkout");
 
-        initUpsellSlider();
-        initVariableForms();
+        setTimeout(function () {
+            initUpsellSlider();
+            initVariableForms();
+        }, 150);
     }
 
     function addProductToCart(data, button) {
