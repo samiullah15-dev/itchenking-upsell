@@ -4,7 +4,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-if (!WC()->cart) {
+if (!function_exists('WC') || !WC()->cart) {
     return;
 }
 
