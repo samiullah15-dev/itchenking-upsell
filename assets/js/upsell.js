@@ -113,7 +113,7 @@ jQuery(function ($) {
             }
 
             window.itchenkingSwiper = new Swiper(".itchenking-swiper", {
-                slidesPerView: 1,
+                slidesPerView: 4,
                 slidesPerGroup: 1,
                 spaceBetween: 15,
                 watchOverflow: true,
