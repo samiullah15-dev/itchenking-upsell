@@ -3,7 +3,7 @@
  * Plugin Name: ItchenKing Upsell Free Shipping
  * Plugin URI: https://github.com/samiullah15-dev/itchenking-upsell
  * Description: WooCommerce free delivery upsell widget with progress bar, product slider, and AJAX add to cart for simple and variable products on cart and checkout pages.
- * Version: 1.0.2
+ * Version: 1.1.0
  * Author: Amplix Digital
  * Text Domain: itchenking-upsell
  * Requires Plugins: woocommerce
@@ -13,7 +13,7 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-define('ITCHENKING_VERSION', '1.0.1');
+define('ITCHENKING_VERSION', '1.1.0');
 define('ITCHENKING_PATH', plugin_dir_path(__FILE__));
 define('ITCHENKING_URL', plugin_dir_url(__FILE__));
 
@@ -32,8 +32,10 @@ add_action('plugins_loaded', function () {
     require_once ITCHENKING_PATH . 'includes/class-free-shipping.php';
     require_once ITCHENKING_PATH . 'includes/class-upsell-query.php';
     require_once ITCHENKING_PATH . 'includes/class-ajax-handler.php';
+    require_once ITCHENKING_PATH . 'includes/class-admin-settings.php';
 
     new ItchenKing_Ajax_Handler();
+    new ItchenKing_Admin_Settings();
 });
 
 /**
@@ -58,6 +60,59 @@ add_action('wp_enqueue_scripts', function () {
         [],
         ITCHENKING_VERSION
     );
+    if (class_exists('ItchenKing_Admin_Settings')) {
+    $s = ItchenKing_Admin_Settings::get_settings();
+
+    $dynamic_css = "
+        .itchenking-upsell-wrapper {
+            font-family: {$s['font_family']};
+        }
+
+        .itchenking-message {
+            color: {$s['message_color']};
+        }
+
+        .itchenking-message strong {
+            color: {$s['highlight_color']};
+        }
+
+        .itchenking-progress-fill {
+            background: {$s['progress_color']};
+        }
+
+        .itchenking-product-title {
+            color: {$s['title_color']};
+            font-size: {$s['title_font_size']}px;
+        }
+
+        .itchenking-price {
+            color: {$s['price_color']};
+            font-size: {$s['price_font_size']}px;
+        }
+
+        .itchenking-product-card .button,
+        .itchenking-product-card button.button {
+            background: {$s['button_bg']} !important;
+            color: {$s['button_text']} !important;
+            font-size: {$s['button_font_size']}px;
+        }
+
+        .itchenking-product-card .button:hover,
+        .itchenking-product-card button.button:hover {
+            background: {$s['button_hover_bg']} !important;
+            color: {$s['button_text']} !important;
+        }
+
+        .itchenking-swiper .swiper-button-next,
+        .itchenking-swiper .swiper-button-prev,
+        .itchenking-swiper .swiper-button-next::after,
+        .itchenking-swiper .swiper-button-prev::after {
+            color: {$s['arrow_color']} !important;
+        }
+    ";
+
+    wp_add_inline_style('itchenking-css', $dynamic_css);
+}
 
     wp_enqueue_script(
         'swiper-js',
