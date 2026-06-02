@@ -107,7 +107,7 @@ jQuery(function ($) {
     }
 
     function initUpsellSlider() {
-        if (typeof Swiper !== "undefined" && $(".itchenking-swiper").length) {
+        if (window.Swiper && document.querySelector(".itchenking-swiper")) {
             if (window.itchenkingSwiper) {
                 window.itchenkingSwiper.destroy(true, true);
             }
@@ -203,7 +203,7 @@ jQuery(function ($) {
         button.addClass("loading").prop("disabled", true);
 
         $.ajax({
-            url: itchenking_ajax.ajaxurl,
+            uurl: itchenking_ajax?.ajaxurl || "/wp-admin/admin-ajax.php",
             type: "POST",
             data: data,
             success: function (response) {

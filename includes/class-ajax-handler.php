@@ -17,12 +17,20 @@ class ItchenKing_Ajax_Handler {
     /**
      * Return refreshed widget HTML.
      */
-    public function refresh() {
-        ob_start();
-        include ITCHENKING_PATH . 'templates/widget.php';
-        echo ob_get_clean();
-        wp_die();
+   public function refresh() {
+
+    if (!function_exists('WC') || !WC()->cart) {
+        wp_send_json_error(['message' => 'Cart not ready']);
     }
+
+    ob_start();
+    include ITCHENKING_PATH . 'templates/widget.php';
+    $html = ob_get_clean();
+
+    wp_send_json_success([
+        'widget' => $html
+    ]);
+}
 
     /**
      * Custom AJAX add to cart for simple and variable products.
@@ -132,6 +140,9 @@ class ItchenKing_Ajax_Handler {
         }
 
         WC()->cart->calculate_totals();
+        if (!function_exists('WC') || !WC()->cart) {
+           wp_send_json_error(['message' => 'Cart lost during AJAX']);
+}
 
         ob_start();
         include ITCHENKING_PATH . 'templates/widget.php';

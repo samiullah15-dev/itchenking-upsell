@@ -105,7 +105,7 @@ if (!$data['unlocked']) {
 
         <form class="variations_form cart itchenking-variable-form"
               data-product_id="<?php echo esc_attr($product_id); ?>"
-              data-product_variations="<?php echo esc_attr(wp_json_encode($available_variations)); ?>">
+             data-product_variations="<?php echo esc_attr(wp_json_encode($available_variations, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)); ?>"
 
             <table class="variations itchenking-variation-table" cellspacing="0" role="presentation">
                 <tbody>

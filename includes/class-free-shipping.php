@@ -75,12 +75,12 @@ class ItchenKing_Free_Shipping {
      */
     private static function get_cart_total_for_threshold() {
 
-        if (!WC()->cart) {
-            return 0;
-        }
+        if (!function_exists('WC') || !WC()->cart || !WC()->cart->get_cart()) {
+    return 0;
+}
 
         if (method_exists(WC()->cart, 'get_displayed_subtotal')) {
-            $subtotal = (float) WC()->cart->get_displayed_subtotal();
+            $subtotal = (float) WC()->cart->get_cart_contents_total();
         } else {
             $subtotal = (float) WC()->cart->get_subtotal();
         }
@@ -88,6 +88,6 @@ class ItchenKing_Free_Shipping {
         // Subtract discounts so the progress matches what customer is actually paying for products.
         $discount = (float) WC()->cart->get_discount_total();
 
-        return max(0, $subtotal - $discount);
+        return max(0, (float) WC()->cart->get_cart_contents_total());
     }
 }
