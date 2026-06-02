@@ -41,9 +41,9 @@ add_action('plugins_loaded', function () {
  */
 add_action('wp_enqueue_scripts', function () {
 
-    if (!class_exists('WooCommerce') || (!is_cart() && !is_checkout())) {
-        return;
-    }
+    if (!class_exists('WooCommerce')) {
+    return;
+}
 
     wp_enqueue_style(
         'swiper-css',
