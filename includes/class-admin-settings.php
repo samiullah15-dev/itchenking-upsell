@@ -4,7 +4,6 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-
 class ItchenKing_Admin_Settings {
 
     const OPTION_NAME = 'itchenking_upsell_settings';
